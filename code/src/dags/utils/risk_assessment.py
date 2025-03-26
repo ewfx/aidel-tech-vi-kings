@@ -182,7 +182,7 @@ def generate_risk_assessment(transaction_data=None, transaction_id=None, transac
         {{
         "extracted_entities": ["string"],
         "entity_types": ["string"],
-        "risk_score": float,
+        "risk_score": float (Calculate an overall risk score between 0 and 1 (0 = low risk, 1 = high risk)),
         "supporting_evidence": ["string"],
         "confidence_score": float,
         "reason": "Multi-factor analysis: [1-2 sentence summary]. Highest risk contributors: [top factors]"
