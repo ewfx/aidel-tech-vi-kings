@@ -220,6 +220,110 @@ Key challenges included integrating diverse technologies (Airflow, Neo4j, Gemini
    make clean
    ```
 
+## BDD Testing
+
+The system includes comprehensive behavior-driven development (BDD) tests to verify key functionality. These tests use the [Behave](https://behave.readthedocs.io/) framework to define scenarios in natural language that both technical and non-technical stakeholders can understand.
+
+### Test Categories
+
+The BDD tests cover the following key risk assessment capabilities:
+
+1. **Sanctions Detection**: Identifying transactions involving sanctioned entities or countries
+2. **PEP Detection**: Recognizing Politically Exposed Persons (PEPs) and their connections
+3. **Shell Company Detection**: Identifying patterns consistent with shell companies
+4. **Network Analysis**: Analyzing relationships between entities in transactions
+5. **Data Enrichment**: Validating data retrieval from various sources
+6. **Complex Risk Detection**: Identifying multi-faceted risk scenarios
+7. **Multi-Jurisdictional Risk**: Assessing risks across multiple jurisdictions 
+
+### Running BDD Tests
+
+```bash
+cd tests
+make setup  # Set up virtual environment and install dependencies
+make bdd    # Run BDD tests
+```
+
+Or run an individual feature file:
+
+```bash
+cd tests
+./venv/bin/behave features/sanctions_detection.feature
+```
+
+### Example BDD Test Case
+
+Below is an example test scenario from our test suite that verifies the system's ability to detect a sanctioned organization:
+
+```gherkin
+Feature: Sanctions Detection
+  As a financial compliance officer
+  I want to identify transactions involving sanctioned entities
+  So that I can block prohibited transactions
+
+  Scenario: Detecting a sanctioned organization
+    Given a transaction with the following content:
+      """
+      Transaction ID: TEST-SANC-002
+      Date: 2023-09-21 14:30:00
+
+      Sender:
+      Name: European Trade Solutions GmbH
+      Account: DE89 3704 0044 0532 0130 00 (Deutsche Bank)
+      Address: Friedrichstrasse 123, Berlin, Germany
+
+      Receiver:
+      Name: Sberbank of Russia
+      Account: RU12 3456 7890 1234 5678 9012
+      Address: Moscow, Russia
+
+      Amount: $750,000 USD
+      Transaction Type: SWIFT Transfer
+      Reference: Equipment Purchase Contract #ER-789
+
+      Additional Notes:
+      Transfer related to energy sector equipment
+      """
+    When I submit the transaction
+    And I wait for the transaction to complete
+    Then the transaction status should be "completed"
+    And the risk score should be at least 0.8
+    And the extracted entities should include:
+      | European Trade Solutions GmbH |
+      | Sberbank of Russia           |
+    And the reasoning should include any of:
+      | sanction         |
+      | russia           |
+      | restricted       |
+```
+
+This test verifies that:
+1. The system can process a transaction involving a sanctioned entity (Sberbank of Russia)
+2. The transaction is properly analyzed and completed
+3. The risk score meets the minimum threshold of 0.8
+4. The system correctly extracts the relevant entities
+5. The reasoning includes key terms related to sanctions
+
+### Test Data Validation
+
+The tests also verify that the system correctly collects and processes data from multiple sources:
+
+```gherkin
+And the assessment data should include the transaction text
+And the assessment data should include organization "European Trade Solutions GmbH"
+And the assessment data should include organization "Sberbank of Russia"
+And organization "Sberbank of Russia" should have data from "sanctions"
+And organization "Sberbank of Russia" should have data from "wikidata"
+And at least 1 sanctions results should be included in the assessment data
+```
+
+These validation steps ensure that:
+1. The original transaction text is preserved
+2. All organizations are correctly identified and stored
+3. Sanctions data is retrieved for sanctioned entities
+4. Additional enrichment data is collected from Wikidata
+5. The minimum expected number of sanctions results are found
+
 ## 🏗️ Tech Stack
 - 🔹 Frontend: React / Vite / Mantine
 - 🔹 Backend: FastAPI
