@@ -16,11 +16,20 @@
 The main objective of this project is to develop a sophisticated AI/ML-powered system that automates entity research, verification, and risk scoring. By leveraging Generative AI, multi-source transaction data analysis, and automated workflows, we aim to enhance accuracy, reduce manual effort, and provide a robust risk evaluation framework. This solution will empower analysts with intelligent insights for informed decision-making.
 
 ## 🎥 Demo
-🔗 [Live Demo](http://pradeep707.me:5173/) (if applicable)  
-📹 [Video Demo](#) (if applicable)  
-🖼️ Screenshots:
+🔗 [Live Demo](http://pradeep707.me:5173/)  
+📹 [Video Demo](artifacts/demo/ProjectDemo-720.mp4)  
 
-![Screenshot 1](link-to-image)
+## 🖼️ Screenshots
+
+| | | |
+|:-------------------------:|:-------------------------:|:-------------------------:|
+| <img width="300" src="artifacts/screenshots/Screenshot1.png"> | <img width="300" src="artifacts/screenshots/Screenshot2.png"> | <img width="300" src="artifacts/screenshots/Screenshot3.png"> |
+| <img width="300" src="artifacts/screenshots/Screenshot4.png"> | <img width="300" src="artifacts/screenshots/Screenshot5.png"> | <img width="300" src="artifacts/screenshots/Screenshot6.png"> |
+| <img width="300" src="artifacts/screenshots/Screenshot7.png"> | <img width="300" src="artifacts/screenshots/Screenshot8.png"> | <img width="300" src="artifacts/screenshots/Screenshot9.png"> |
+| <img width="300" src="artifacts/screenshots/Screenshot10.png"> | <img width="300" src="artifacts/screenshots/Screenshot11.png"> | <img width="300" src="artifacts/screenshots/Screenshot12.png"> |
+| <img width="300" src="artifacts/screenshots/Screenshot13.png"> | <img width="300" src="artifacts/screenshots/Screenshot14.png"> | <img width="300" src="artifacts/screenshots/Screenshot15.png"> |
+| <img width="300" src="artifacts/screenshots/Screenshot16.png"> | <img width="300" src="artifacts/screenshots/Screenshot17.png"> | <img width="300" src="artifacts/screenshots/Screenshot18.png"> |
+
 
 ## ⚙️ What It Does
 Our AML system will perform these steps automatically:
