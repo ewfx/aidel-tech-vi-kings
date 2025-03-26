@@ -136,7 +136,7 @@
     <text x="-280" y="50" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#2c3e50">Gemini Pro LLM</text>
     
     <rect x="-170" y="25" width="180" height="40" rx="5" fill="#27ae60" opacity="0.7" />
-    <text x="-80" y="50" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#2c3e50">NLP Processing</text>
+    <text x="-80" y="50" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#2c3e50">KB &amp; RAG</text>
     
     <rect x="30" y="25" width="160" height="40" rx="5" fill="#27ae60" opacity="0.7" />
     <text x="110" y="50" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#2c3e50">Entity Recognition</text>
