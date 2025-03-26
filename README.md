@@ -1,9 +1,8 @@
-# 🚀 Project Name
+# 🚀 AML Risk Assessment
 
 ## 📌 Table of Contents
 - [Introduction](#introduction)
 - [Demo](#demo)
-- [Inspiration](#inspiration)
 - [What It Does](#what-it-does)
 - [How We Built It](#how-we-built-it)
 - [Challenges We Faced](#challenges-we-faced)
@@ -14,26 +13,39 @@
 ---
 
 ## 🎯 Introduction
-A brief overview of your project and its purpose. Mention which problem statement are your attempting to solve. Keep it concise and engaging.
+The main objective of this project is to develop a sophisticated AI/ML-powered system that automates entity research, verification, and risk scoring. By leveraging Generative AI, multi-source transaction data analysis, and automated workflows, we aim to enhance accuracy, reduce manual effort, and provide a robust risk evaluation framework. This solution will empower analysts with intelligent insights for informed decision-making.
 
 ## 🎥 Demo
-🔗 [Live Demo](#) (if applicable)  
+🔗 [Live Demo](http://pradeep707.me:5173/) (if applicable)  
 📹 [Video Demo](#) (if applicable)  
 🖼️ Screenshots:
 
 ![Screenshot 1](link-to-image)
 
-## 💡 Inspiration
-What inspired you to create this project? Describe the problem you're solving.
-
 ## ⚙️ What It Does
-Explain the key features and functionalities of your project.
+Our AML system will perform these steps automatically:
+
+- **Entity Extraction**  
+  The system identifies organizations, individuals, and jurisdictions from your transaction.
+
+- **Sanctions Screening**  
+  All entities are checked against global sanctions lists and PEP databases.
+
+- **Entity Verification**  
+  Organizations are verified through corporate registries and global databases.
+
+- **Risk Assessment**  
+  A comprehensive risk score is calculated based on all findings and evidence.
+
+- **Report Generation**  
+  A detailed risk report is generated with supporting evidence and recommendations.
+
 
 ## 🛠️ How We Built It
-Briefly outline the technologies, frameworks, and tools used in development.
+We utilized **Apache Airflow** for workflow orchestration, **Neo4j** for graph-based data modeling, and **Gemini LLMs** for AI-powered tasks like entity extraction and risk scoring. The frontend was built with React, Vite, and Mantine, while the **backend** used FastAPI for high performance and scalability.
 
 ## 🚧 Challenges We Faced
-Describe the major technical or non-technical challenges your team encountered.
+Key challenges included integrating diverse technologies (Airflow, Neo4j, Gemini), optimizing data pipelines for low latency, and designing an intuitive frontend. Overcoming these required innovative problem-solving, effective collaboration, and rapid iteration.
 
 ## 🏃 How to Run
 ### Prerequisites
