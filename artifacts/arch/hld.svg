@@ -1,0 +1,184 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1050">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8f9fa" />
+      <stop offset="100%" stop-color="#e9ecef" />
+    </linearGradient>
+    
+    <!-- Component styles -->
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-opacity="0.2"/>
+    </filter>
+    
+    <!-- Database icon -->
+    <symbol id="database-icon" viewBox="0 0 24 24">
+      <path d="M12,3C7.58,3 4,4.79 4,7C4,9.21 7.58,11 12,11C16.42,11 20,9.21 20,7C20,4.79 16.42,3 12,3M4,9V12C4,14.21 7.58,16 12,16C16.42,16 20,14.21 20,12V9C20,11.21 16.42,13 12,13C7.58,13 4,11.21 4,9M4,14V17C4,19.21 7.58,21 12,21C16.42,21 20,19.21 20,17V14C20,16.21 16.42,18 12,18C7.58,18 4,16.21 4,14Z" fill="#3498db"/>
+    </symbol>
+    
+    <!-- Server icon -->
+    <symbol id="server-icon" viewBox="0 0 24 24">
+      <path d="M4,1H20A1,1 0 0,1 21,2V6A1,1 0 0,1 20,7H4A1,1 0 0,1 3,6V2A1,1 0 0,1 4,1M4,9H20A1,1 0 0,1 21,10V14A1,1 0 0,1 20,15H4A1,1 0 0,1 3,14V10A1,1 0 0,1 4,9M4,17H20A1,1 0 0,1 21,18V22A1,1 0 0,1 20,23H4A1,1 0 0,1 3,22V18A1,1 0 0,1 4,17M9,5H10V3H9V5M9,13H10V11H9V13M9,21H10V19H9V21M5,3V5H7V3H5M5,11V13H7V11H5M5,19V21H7V19H5Z" fill="#e74c3c"/>
+    </symbol>
+    
+    <!-- API icon -->
+    <symbol id="api-icon" viewBox="0 0 24 24">
+      <path d="M7,7H5A2,2 0 0,0 3,9V15A2,2 0 0,0 5,17H7V7M17,7H19A2,2 0 0,1 21,9V15A2,2 0 0,1 19,17H17V7M11,13H13V17H15V7H13V11H11V7H9V17H11V13Z" fill="#8e44ad"/>
+    </symbol>
+    
+    <!-- AI icon -->
+    <symbol id="ai-icon" viewBox="0 0 24 24">
+      <path d="M5,3H19A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3M12,10A2,2 0 0,0 10,12A2,2 0 0,0 12,14A2,2 0 0,0 14,12A2,2 0 0,0 12,10M12,15C10.34,15 9,13.66 9,12C9,10.34 10.34,9 12,9C13.66,9 15,10.34 15,12C15,13.66 13.66,15 12,15M17,8H7V6H17V8Z" fill="#27ae60"/>
+    </symbol>
+    
+    <!-- UI icon -->
+    <symbol id="ui-icon" viewBox="0 0 24 24">
+      <path d="M21,3H3C1.9,3 1,3.9 1,5V19A2,2 0 0,0 3,21H21A2,2 0 0,0 23,19V5C23,3.9 22.1,3 21,3M21,19H3V5H21V19M6,13H14V11H6V13M6,17H14V15H6V17M6,9H14V7H6V9M16,7V9H18V7H16M16,11V13H18V11H16M16,15V17H18V15H16Z" fill="#f39c12"/>
+    </symbol>
+    
+    <!-- Workflow icon -->
+    <symbol id="workflow-icon" viewBox="0 0 24 24">
+      <path d="M22,3H2C0.9,3 0,3.9 0,5V19C0,20.1 0.9,21 2,21H22C23.1,21 24,20.1 24,19V5C24,3.9 23.1,3 22,3M8,15C7.7,15 7.4,14.9 7.2,14.7L4.5,12L7.2,9.3C7.6,8.9 8.3,8.9 8.7,9.3C9.1,9.7 9.1,10.3 8.7,10.7L7.4,12L8.7,13.3C9.1,13.7 9.1,14.4 8.7,14.8C8.5,14.9 8.3,15 8,15M16,15H10C9.4,15 9,14.6 9,14C9,13.4 9.4,13 10,13H16C16.6,13 17,13.4 17,14C17,14.6 16.6,15 16,15M16,11H10C9.4,11 9,10.6 9,10C9,9.4 9.4,9 10,9H16C16.6,9 17,9.4 17,10C17,10.6 16.6,11 16,11Z" fill="#7f8c8d"/>
+    </symbol>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1000" height="1400" fill="url(#bg-gradient)" />
+  
+  <!-- Title -->
+  <text x="500" y="50" font-family="Arial, sans-serif" font-size="36" font-weight="bold" text-anchor="middle" fill="#2c3e50">Entity Risk Assessment High Level Architecture</text>
+  
+  <!-- User Interface Layer -->
+  <g transform="translate(500, 150)">
+    <rect x="-400" y="-30" width="800" height="110" rx="10" fill="#ffffff" filter="url(#shadow)" />
+    <use href="#ui-icon" x="-110" y="-20" width="40" height="40" />
+    <text x="-60" y="5" font-family="Arial, sans-serif" font-size="18" fill="#2c3e50">User Interface Layer</text>
+    
+    <!-- UI Components -->
+    <rect x="-350" y="25" width="130" height="40" rx="5" fill="#f1c40f" opacity="0.7" />
+    <text x="-285" y="50" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#2c3e50">Dashboard</text>
+    
+    <rect x="-180" y="25" width="170" height="40" rx="5" fill="#f1c40f" opacity="0.7" />
+    <text x="-95" y="50" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#2c3e50">Transaction Search</text>
+    
+    <rect x="20" y="25" width="170" height="40" rx="5" fill="#f1c40f" opacity="0.7" />
+    <text x="105" y="50" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#2c3e50">Risk Report Viewer</text>
+    
+    <rect x="230" y="25" width="140" height="40" rx="5" fill="#f1c40f" opacity="0.7" />
+    <text x="300" y="50" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#2c3e50">Entity Network</text>
+  </g>
+  
+  <!-- API Gateway Layer -->
+  <g transform="translate(500, 300)">
+    <rect x="-400" y="-30" width="800" height="110" rx="10" fill="#ffffff" filter="url(#shadow)" />
+    <use href="#api-icon" x="-110" y="-20" width="40" height="40" />
+    <text x="-60" y="5" font-family="Arial, sans-serif" font-size="18" fill="#2c3e50">API Gateway Layer</text>
+    
+    <!-- API Components -->
+    <rect x="-280" y="25" width="160" height="40" rx="5" fill="#9b59b6" opacity="0.7" />
+    <text x="-200" y="50" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#2c3e50">FastAPI Endpoint</text>
+    
+    <rect x="-100" y="25" width="200" height="40" rx="5" fill="#9b59b6" opacity="0.7" />
+    <text x="0" y="50" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#2c3e50">Authentication Service</text>
+    
+    <rect x="120" y="25" width="150" height="40" rx="5" fill="#9b59b6" opacity="0.7" />
+    <text x="195" y="50" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#2c3e50">Request Validation</text>
+  </g>
+  
+  <!-- Workflow Orchestration Layer -->
+  <g transform="translate(500, 450)">
+    <rect x="-400" y="-30" width="800" height="110" rx="10" fill="#ffffff" filter="url(#shadow)" />
+    <use href="#workflow-icon" x="-110" y="-20" width="40" height="40" />
+    <text x="-60" y="5" font-family="Arial, sans-serif" font-size="18" fill="#2c3e50">Workflow Orchestration Layer</text>
+    
+    <!-- Workflow Components -->
+    <rect x="-350" y="25" width="170" height="40" rx="5" fill="#95a5a6" opacity="0.7" />
+    <text x="-265" y="50" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#2c3e50">Airflow DAG</text>
+    
+    <rect x="-160" y="25" width="150" height="40" rx="5" fill="#95a5a6" opacity="0.7" />
+    <text x="-85" y="50" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#2c3e50">Entity Extraction</text>
+    
+    <rect x="10" y="25" width="150" height="40" rx="5" fill="#95a5a6" opacity="0.7" />
+    <text x="85" y="50" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#2c3e50">Entity Enrichment</text>
+    
+    <rect x="180" y="25" width="150" height="40" rx="5" fill="#95a5a6" opacity="0.7" />
+    <text x="255" y="50" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#2c3e50">Risk Assessment</text>
+  </g>
+  
+  <!-- Data Enrichment Layer -->
+  <g transform="translate(500, 600)">
+    <rect x="-400" y="-30" width="800" height="110" rx="10" fill="#ffffff" filter="url(#shadow)" />
+    <use href="#server-icon" x="-110" y="-20" width="40" height="40" />
+    <text x="-60" y="5" font-family="Arial, sans-serif" font-size="18" fill="#2c3e50">Data Enrichment Services</text>
+    
+    <!-- Data Enrichment Components -->
+    <rect x="-370" y="25" width="180" height="40" rx="5" fill="#3498db" opacity="0.7" />
+    <text x="-280" y="50" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#2c3e50">OpenCorporates API</text>
+    
+    <rect x="-170" y="25" width="180" height="40" rx="5" fill="#3498db" opacity="0.7" />
+    <text x="-80" y="50" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#2c3e50">OpenSanctions API</text>
+    
+    <rect x="30" y="25" width="130" height="40" rx="5" fill="#3498db" opacity="0.7" />
+    <text x="95" y="50" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#2c3e50">Wikidata</text>
+    
+    <rect x="180" y="25" width="170" height="40" rx="5" fill="#3498db" opacity="0.7" />
+    <text x="265" y="50" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#2c3e50">News/GDELT API</text>
+  </g>
+  
+  <!-- AI Intelligence Layer -->
+  <g transform="translate(500, 750)">
+    <rect x="-400" y="-30" width="800" height="110" rx="10" fill="#ffffff" filter="url(#shadow)" />
+    <use href="#ai-icon" x="-110" y="-20" width="40" height="40" />
+    <text x="-60" y="5" font-family="Arial, sans-serif" font-size="18" fill="#2c3e50">AI Intelligence Layer</text>
+    
+    <!-- AI Components -->
+    <rect x="-370" y="25" width="180" height="40" rx="5" fill="#27ae60" opacity="0.7" />
+    <text x="-280" y="50" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#2c3e50">Gemini Pro LLM</text>
+    
+    <rect x="-170" y="25" width="180" height="40" rx="5" fill="#27ae60" opacity="0.7" />
+    <text x="-80" y="50" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#2c3e50">NLP Processing</text>
+    
+    <rect x="30" y="25" width="160" height="40" rx="5" fill="#27ae60" opacity="0.7" />
+    <text x="110" y="50" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#2c3e50">Entity Recognition</text>
+    
+    <rect x="210" y="25" width="150" height="40" rx="5" fill="#27ae60" opacity="0.7" />
+    <text x="285" y="50" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#2c3e50">Risk Assessment</text>
+  </g>
+  
+  <!-- Data Storage Layer -->
+  <g transform="translate(500, 900)">
+    <rect x="-400" y="-30" width="800" height="110" rx="10" fill="#ffffff" filter="url(#shadow)" />
+    <use href="#database-icon" x="-110" y="-20" width="40" height="40" />
+    <text x="-60" y="5" font-family="Arial, sans-serif" font-size="18" fill="#2c3e50">Data Storage Layer</text>
+    
+    <!-- Storage Components -->
+    <rect x="-350" y="25" width="150" height="40" rx="5" fill="#3498db" opacity="0.7" />
+    <text x="-275" y="50" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#2c3e50">Neo4j Graph DB</text>
+    
+    <rect x="-180" y="25" width="150" height="40" rx="5" fill="#3498db" opacity="0.7" />
+    <text x="-105" y="50" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#2c3e50">PostgreSQL</text>
+    
+    <rect x="-10" y="25" width="150" height="40" rx="5" fill="#3498db" opacity="0.7" />
+    <text x="65" y="50" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#2c3e50">Redis Cache</text>
+    
+    <rect x="160" y="25" width="180" height="40" rx="5" fill="#3498db" opacity="0.7" />
+    <text x="250" y="50" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#2c3e50">File System Storage</text>
+  </g>
+  
+  <!-- Connecting lines -->
+  <!-- Layer 1 to 2 -->
+  <line x1="500" y1="230" x2="500" y2="270" stroke="#34495e" stroke-width="2" stroke-dasharray="5,5" />
+  
+  <!-- Layer 2 to 3 -->
+  <line x1="500" y1="380" x2="500" y2="420" stroke="#34495e" stroke-width="2" stroke-dasharray="5,5" />
+  
+  <!-- Layer 3 to 4 -->
+  <line x1="500" y1="530" x2="500" y2="570" stroke="#34495e" stroke-width="2" stroke-dasharray="5,5" />
+  
+  <!-- Layer 3 to 5 (diagonal) -->
+  <line x1="500" y1="680" x2="500" y2="710" stroke="#34495e" stroke-width="2" stroke-dasharray="5,5" />
+  
+  <!-- Layer 4 to 5 -->
+  <line x1="500" y1="830" x2="500" y2="870" stroke="#34495e" stroke-width="2" stroke-dasharray="5,5" />
+  
+  </svg>
