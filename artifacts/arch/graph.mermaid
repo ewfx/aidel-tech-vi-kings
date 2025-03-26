@@ -2,135 +2,67 @@
   init: {
     'theme': 'dark',
     'themeVariables': {
-      'primaryColor': '#1F3A93',
+      'primaryColor': '#0078D7',
       'primaryTextColor': '#FFFFFF',
-      'primaryBorderColor': '#4A86E8',
-      'lineColor': '#4A86E8',
-      'secondaryColor': '#2574A9',
-      'tertiaryColor': '#5C97BF',
-      'fontFamily': 'Montserrat, Arial, sans-serif',
-      'fontSize': '14px',
-      'nodeBorder': '#4A86E8',
-      'clusterBkg': '#1c2331',
-      'clusterBorder': '#4A86E8',
-      'edgeLabelBackground': '#2C3E50'
+      'primaryBorderColor': '#5B9BD5',
+      'lineColor': '#5B9BD5',
+      'secondaryColor': '#2C3E50',
+      'tertiaryColor': '#2980B9',
+      'fontFamily': 'Arial, sans-serif'
     },
     'flowchart': {
-      'curve': 'natural',
-      'diagramPadding': 10,
-      'nodeSpacing': 60,
-      'rankSpacing': 80
+      'curve': 'basis',
+      'diagramPadding': 10
     }
   }
 }%%
 
 flowchart TB
-    classDef mainNode fill:#4A69BD,stroke:#4A69BD,stroke-width:3px,color:white,font-weight:bold
-    classDef dataNode fill:#27AE60,stroke:#27AE60,stroke-width:2px,color:white
-    classDef processNode fill:#2C3E50,stroke:#3498DB,stroke-width:2px,color:white
-    classDef enrichNode fill:#8E44AD,stroke:#8E44AD,stroke-width:2px,color:white
-    classDef riskNode fill:#F64747,stroke:#F64747,stroke-width:2px,color:white
-    classDef outputNode fill:#F9BF3B,stroke:#F9BF3B,stroke-width:2px,color:white
-    classDef decisionNode fill:#19B5FE,stroke:#19B5FE,stroke-width:2px,color:white
-    classDef sourceNode fill:#2574A9,stroke:#2574A9,stroke-width:2px,color:white
+    classDef mainNode fill:#0078D7,stroke:#5B9BD5,stroke-width:2px,color:white,font-weight:bold
+    classDef enrichNode fill:#7030A0,stroke:#9b59b6,stroke-width:2px,color:white
+    classDef sourceNode fill:#00B0F0,stroke:#00B0F0,stroke-width:2px,color:white
+    classDef riskNode fill:#C00000,stroke:#C00000,stroke-width:2px,color:white
+    classDef outputNode fill:#ED7D31,stroke:#ED7D31,stroke-width:2px,color:white
     
-    %% Main flow nodes
-    Transaction(["🔄 Transaction Received"]):::mainNode
-    Extract(["🔍 Entity Extraction"]):::mainNode
-    Process(["⚙️ Enrichment Processing"]):::mainNode
-    Assess(["⚖️ Risk Assessment"]):::mainNode
-    Store(["💾 Data Persistence"]):::mainNode
-    Callback(["📱 API Notification"]):::mainNode
-    Complete(["✅ Transaction Complete"]):::mainNode
+    %% Main workflow
+    Transaction["📄 Transaction Data"]:::mainNode
+    ExtractEntities["🔍 Extract Entities"]:::mainNode
+    EnrichData["📊 Enrich Data"]:::enrichNode
+    AssessRisk["⚖️ Risk Assessment"]:::riskNode
+    StoreResults["💾 Store Results"]:::outputNode
+    SendCallback["🔄 API Callback"]:::outputNode
     
-    %% Main data flow
-    Transaction --> Extract --> Process --> Assess --> Store --> Callback --> Complete
+    %% Flow connections
+    Transaction --> ExtractEntities --> EnrichData --> AssessRisk --> StoreResults --> SendCallback
     
-    %% Subprocesses
-    subgraph DataProcessing["📝 Data Collection & Entity Extraction"]
+    %% Data sources
+    subgraph DataSources["Intelligence Sources"]
         direction TB
-        GetTransaction["📥 Receive Transaction Data"]:::dataNode
-        ExtractEntities["🔎 AI-Powered Entity Extraction"]:::dataNode
-        EntityHistory["🕰️ Historical Entity Analysis"]:::dataNode
-        
-        GetTransaction --> ExtractEntities --> EntityHistory
+        OpenCorp["🏛️ Corporate Registry"]:::sourceNode
+        Sanctions["⚠️ Sanctions Lists"]:::sourceNode
+        PEP["👑 PEP Database"]:::sourceNode
+        Wikidata["🌐 Entity Networks"]:::sourceNode
+        News["📰 Adverse Media"]:::sourceNode
     end
     
-    subgraph EnrichmentProcess["🔍 Multi-Source Entity Enrichment"]
+    %% Entity groups
+    subgraph Entities["Entity Processing"]
         direction TB
-        subgraph Organizations["🏢 Organization Processing"]
-            direction TB
-            OrgList["📋 Extract Organizations"]:::processNode
-            ProcessOrg["🔄 Process Each Organization"]:::processNode
-            
-            OrgList --> ProcessOrg
-        end
-        
-        subgraph People["👤 People Processing"]
-            direction TB
-            PeopleList["📋 Extract People"]:::processNode
-            ProcessPerson["🔄 Process Each Person"]:::processNode
-            
-            PeopleList --> ProcessPerson
-        end
-        
-        subgraph Discovered["🔎 Network Discovery"]
-            direction TB
-            DiscoverPeople["🔍 Extract Network Entities"]:::processNode
-            ProcessDiscovered["🔄 Process Each Discovered Entity"]:::processNode
-            
-            DiscoverPeople --> ProcessDiscovered
-        end
-        
-        Organizations --- People --- Discovered
+        ProcessOrgs["🏢 Organizations"]:::enrichNode
+        ProcessPeople["👤 People"]:::enrichNode
+        ProcessDiscovered["🔎 Discovered Entities"]:::enrichNode
     end
     
-    subgraph DataSources["📊 Intelligence Sources & APIs"]
+    %% Storage
+    subgraph Storage["Data Storage"]
         direction TB
-        OpenCorp["🏛️ Corporate Registry (OpenCorporates)"]:::sourceNode
-        Sanctions["⚠️ Global Sanctions Screening"]:::sourceNode
-        Wikidata["🌐 Entity Network Analysis"]:::sourceNode
-        PEP["👑 Political Exposure Detection"]:::sourceNode
-        News["📰 Adverse Media Analysis"]:::sourceNode
-        
-        OpenCorp --- Sanctions --- Wikidata --- PEP --- News
+        Neo4j["🕸️ Neo4j Graph DB"]:::outputNode
+        KB["📚 Knowledge Base"]:::outputNode
     end
     
-    subgraph RiskAnalysis["🛡️ Risk Analysis & Decision"]
-        direction TB
-        CombineResults["🔗 Data Fusion & Aggregation"]:::riskNode
-        RiskAssess["🧠 AI Risk Analysis"]:::riskNode
-        RiskScore["📊 Risk Score Calculation"]:::riskNode
-        Evidence["🔍 Evidence Collection"]:::riskNode
-        
-        CombineResults --> RiskAssess
-        RiskAssess --> RiskScore & Evidence
-    end
-    
-    subgraph Persistence["📚 Knowledge Management"]
-        direction TB
-        KB["📚 Knowledge Base Organization"]:::outputNode
-        Neo4j["🕸️ Graph Database Storage"]:::outputNode
-        ResultsAPI["📡 Results API Integration"]:::outputNode
-        
-        KB --> Neo4j --> ResultsAPI
-    end
-    
-    %% High-level connections
-    Extract -.-> DataProcessing
-    Process -.-> EnrichmentProcess
-    Process -.-> DataSources
-    Assess -.-> RiskAnalysis
-    Store -.-> Persistence
-    
-    %% Detailed connections
-    EntityHistory --> Organizations & People
-    Organizations --> DiscoverPeople
-    
-    ProcessOrg --> OpenCorp & Sanctions & Wikidata & News
-    ProcessPerson --> PEP & Sanctions & News
-    ProcessDiscovered --> PEP & Sanctions & News
-    
-    Organizations & People & Discovered --> CombineResults
-    
-    RiskScore & Evidence --> KB
+    %% Connect subgraphs
+    ExtractEntities --> Entities
+    Entities --> DataSources
+    EnrichData --> DataSources
+    AssessRisk --> Storage
+    StoreResults --> Storage
