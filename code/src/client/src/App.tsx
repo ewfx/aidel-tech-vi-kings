@@ -1,4 +1,3 @@
-// App.tsx - Modern Application Component with Enhanced UI
 import React from 'react';
 import { 
   AppShell, 
@@ -16,7 +15,7 @@ import {
   Badge,
   Transition,
 } from '@mantine/core';
-import { useDisclosure, useMediaQuery } from '@mantine/hooks';
+import { useDisclosure } from '@mantine/hooks';
 import { Notifications } from '@mantine/notifications';
 import { BrowserRouter as Router, Route, Routes, Link, useLocation } from 'react-router-dom';
 import {
@@ -182,7 +181,7 @@ function RouterNavigation() {
             <Transition mounted={true} transition="slide-right" duration={200} timingFunction="ease">
               {(styles) => (
                 <Box style={styles}>
-                  <Text size="xs" fw={500}>AML RISK ASSESSMENT</Text>
+                  <Text size="xs" fw={500}>EIRA</Text>
                   <Text size="xs" c="dimmed">v1.0.0</Text>
                 </Box>
               )}
@@ -197,7 +196,6 @@ function RouterNavigation() {
 const App: React.FC = () => {
   const [opened, { toggle }] = useDisclosure();
   const theme = useMantineTheme();
-  const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
 
   return (
     <Router>
@@ -224,10 +222,7 @@ const App: React.FC = () => {
                   <IconShieldLock size={20} />
                 </ThemeIcon>
                 <Box>
-                  <Title order={3} size="h4">AML Risk Assessment</Title>
-                  {!isMobile && (
-                    <Text c="dimmed" size="xs">Anti-Money Laundering Compliance</Text>
-                  )}
+                  <Title order={3} size="h4">Entity Risk Assessment</Title>
                 </Box>
               </Group>
             </Group>

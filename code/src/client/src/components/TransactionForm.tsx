@@ -93,26 +93,27 @@ const TransactionForm = () => {
   };
 
   const handleSampleData = () => {
-    form.setFieldValue('transactionData', `Transaction ID: TXN-2023-5A9B
-Date: 2023-08-15 14:22:00
-Sender:
-Name: "Global Horizons Consulting LLC"
-Account: IBAN CH56 0483 5012 3456 78009 (Swiss bank)
-Address: Rue du Marché 17, Geneva, Switzerland
-Notes: "Consulting fees for project Aurora"
-Receiver:
-Name: "Bright Future Nonprofit Inc"
-Account: 987654321 (Cayman National Bank, KY)
-Address: P.O. Box 1234, George Town, Cayman Islands
-Tax ID: KY-45678
-Amount: $49,850.00 (USD)
-Currency Exchange: N/A
-Transaction Type: Wire Transfer
-Reference: "Charitable Donation Ref #DR-2023-0815"
-Additional Notes:
-"Urgent transfer approved by Mr. Ali Al-Mansoori (Director)."
-"Linked invoice missing. Processed via intermediary Quantum Holdings Ltd (BVI)."
-Sender IP: 192.168.89.123 (VPN detected: NordVPN, exit node in Panama)`);
+    form.setFieldValue('transactionData', `
+      Transaction ID: TEST-SANC-002
+      Date: 2023-09-21 14:30:00
+
+      Sender:
+      Name: European Trade Solutions GmbH
+      Account: DE89 3704 0044 0532 0130 00 (Deutsche Bank)
+      Address: Friedrichstrasse 123, Berlin, Germany
+
+      Receiver:
+      Name: Sberbank of Russia
+      Account: RU12 3456 7890 1234 5678 9012
+      Address: Moscow, Russia
+
+      Amount: $750,000 USD
+      Transaction Type: SWIFT Transfer
+      Reference: Equipment Purchase Contract #ER-789
+
+      Additional Notes:
+      Transfer related to energy sector equipment
+      `);
   };
 
   const handleCopyToClipboard = () => {
@@ -145,12 +146,12 @@ Sender IP: 192.168.89.123 (VPN detected: NordVPN, exit node in Panama)`);
       <Flex align="center" justify="space-between" mb="xl">
         <Box>
           <Title order={2} mb={4}>Submit Transaction</Title>
-          <Text c="dimmed" size="sm">Enter transaction details for AML risk assessment</Text>
+          <Text c="dimmed" size="sm">Enter transaction details for risk assessment</Text>
         </Box>
 
         <Group>
           <Badge size="lg" radius="md" variant="gradient" gradient={{ from: 'blue', to: 'cyan' }}>
-            AML Processing
+            EIRA Processing
           </Badge>
 
           <Button
@@ -487,7 +488,7 @@ Additional Notes:
           </ThemeIcon>
           <Box>
             <Title order={4}>What Happens After Submission?</Title>
-            <Text size="sm" c="dimmed">Our AML system will perform these steps automatically</Text>
+            <Text size="sm" c="dimmed">Our system will perform these steps automatically</Text>
           </Box>
         </Flex>
 

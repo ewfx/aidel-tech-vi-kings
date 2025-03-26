@@ -462,7 +462,7 @@ const TransactionHistory = () => {
               Transaction History
             </Title>
             <Text c="dimmed" size="sm">
-              View and manage all your AML risk assessment transactions
+              View and manage all your risk assessment transactions
             </Text>
           </Box>
 

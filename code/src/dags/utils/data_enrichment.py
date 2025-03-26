@@ -91,7 +91,7 @@ def get_open_corporates_data(organization_info, **context):
                 transaction_id, 
                 file_name, 
                 company, 
-                subfolder="organization_results/opencorporates"
+                subfolder="entity_data/organization_results/opencorporates"
             )
                 
             return {"status": "success", "data": company}
@@ -133,7 +133,7 @@ def check_sanctions(entity_type, entity_name, **context):
         high_confidence_results = [res for res in results if res.get("score", 0) > 0.70]
         
         # Save the sanctions check results to the transaction folder
-        subfolder = "organization_results/sanctions" if entity_type == "Company" else "people_results/sanctions"
+        subfolder = "entity_data/organization_results/sanctions" if entity_type == "Company" else "entity_data/people_results/sanctions"
         file_name = f"{entity_name.replace(' ', '_')}.json"
         save_transaction_data(
             RESULTS_FOLDER, 
@@ -252,7 +252,7 @@ def query_wikidata(entity_name, **context):
             transaction_id, 
             f"{entity_name.replace(' ', '_')}.json", 
             full_result, 
-            subfolder="organization_results/wikidata"
+            subfolder="entity_data/organization_results/wikidata"
         )
             
         return {"status": "success", "data": entity_info, "associated_people": associated_people}
@@ -283,9 +283,11 @@ def check_pep_list(person_name, **context):
         pep_matches = []
         try:
             with open(PEP_DATA_FILE, 'r', encoding='utf-8') as csv_file:
-                csv_reader = csv.DictReader(csv_file, delimiter='\t')
+                # Changed delimiter from tab to comma based on the sample data
+                csv_reader = csv.DictReader(csv_file)
                 
                 for row in csv_reader:
+                    # Check for missing keys and use empty string as default
                     row_name = row.get('name', '')
                     row_aliases = row.get('aliases', '').split(';') if row.get('aliases') else []
                     
@@ -293,12 +295,29 @@ def check_pep_list(person_name, **context):
                     simplified_row_name = re.sub(r'[^\w\s]', '', row_name.lower())
                     simplified_aliases = [re.sub(r'[^\w\s]', '', alias.lower()) for alias in row_aliases]
                     
-                    # Check if the name matches
-                    name_match = any(part in simplified_row_name for part in name_parts)
-                    alias_match = any(any(part in alias for part in name_parts) for alias in simplified_aliases)
+                    # Improved name matching logic
+                    # Check if any part of the search name appears in the PEP name
+                    name_match = False
+                    for part in name_parts:
+                        if part and len(part) > 2:  # Only consider parts with more than 2 characters
+                            if part in simplified_row_name.split():
+                                name_match = True
+                                break
+                    
+                    # Check if any part of the search name appears in any alias
+                    alias_match = False
+                    for alias in simplified_aliases:
+                        for part in name_parts:
+                            if part and len(part) > 2:
+                                if part in alias.split():
+                                    alias_match = True
+                                    break
+                        if alias_match:
+                            break
                     
                     if name_match or alias_match:
                         pep_matches.append(row)
+        
         except Exception as e:
             logger.error(f"Error reading PEP data file: {str(e)}")
             return {"status": "failed", "reason": f"Error reading PEP data: {str(e)}", "data": None}
@@ -309,7 +328,7 @@ def check_pep_list(person_name, **context):
             transaction_id, 
             f"{person_name.replace(' ', '_')}.json", 
             pep_matches, 
-            subfolder="people_results/pep"
+            subfolder="entity_data/people_results/pep"
         )
             
         return {"status": "success", "data": pep_matches}
@@ -363,7 +382,7 @@ def check_adverse_news(entity_name, **context):
         task_instance = context.get('task_instance')
         task_id = task_instance.task_id if task_instance else ''
         is_person = task_id and 'person' in task_id
-        subfolder = "people_results/news" if is_person else "organization_results/news"
+        subfolder = "entity_data/people_results/news" if is_person else "entity_data/organization_results/news"
         
         # Save the adverse news to the transaction folder
         save_transaction_data(

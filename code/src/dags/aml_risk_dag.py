@@ -4,8 +4,6 @@ from airflow.operators.dummy import DummyOperator
 from airflow.utils.dates import days_ago
 from airflow.utils.trigger_rule import TriggerRule
 import logging
-import os
-import json
 import httpx
 from datetime import timedelta
 
@@ -48,7 +46,7 @@ with DAG(
     start_date=days_ago(1),
     tags=['aml', 'risk', 'assessment', 'neo4j'],
     catchup=False,
-    render_template_as_native_obj=True,  # Enable rendering of templates as Python objects
+    render_template_as_native_obj=True,
 ) as dag:
     
     # ========== INITIAL SETUP TASKS ==========
@@ -86,7 +84,6 @@ with DAG(
         transaction_data = transaction_info["transaction_data"]
         transaction_id = transaction_info["transaction_id"]
         
-        # Use the function that works with text directly
         entities = extract_entities_from_text(transaction_data, transaction_id)
         logger.info(f"Extracted entities: {entities}")
         return entities
@@ -95,8 +92,6 @@ with DAG(
     def get_entity_history(transaction_info, entities):
         """Retrieve historical information for entities from Neo4j."""
         transaction_id = transaction_info["transaction_id"]
-        
-        # Use the Neo4j utility to get historical data
         history = retrieve_entity_history(transaction_id, entities)
         
         logger.info(f"Retrieved history for entities in transaction: {transaction_id}")
@@ -114,49 +109,24 @@ with DAG(
             return entities_dict.get("organizations", [])
         
         @task
-        def extract_history_map(history_dict):
-            """Extract and flatten the entity history into a usable map."""
-            # This helps convert the XCom reference to an actual dictionary
-            return history_dict or {}
-        
-        @task
         def process_organization(organization, history_map, **context):
             """Process a single organization with all relevant checks."""
             org_name = organization.get('name', '')
             logger.info(f"Processing organization: {org_name}")
             
-            # Extract the transaction ID from the unpacked transaction_info
-            # This avoids nested XCom references
             transaction_id = context['dag_run'].conf.get('transaction_id')
             
-            results = {}
+            results = {
+                'opencorporates': get_open_corporates_data(organization, transaction_id=transaction_id, **context),
+                'sanctions': check_sanctions('Company', org_name, transaction_id=transaction_id, **context),
+                'wikidata': query_wikidata(org_name, transaction_id=transaction_id, **context),
+                'news': check_adverse_news(org_name, transaction_id=transaction_id, **context)
+            }
             
-            # Get OpenCorporates data
-            results['opencorporates'] = get_open_corporates_data(
-                organization, transaction_id=transaction_id, **context
-            )
-            
-            # Check sanctions
-            results['sanctions'] = check_sanctions(
-                'Company', org_name, transaction_id=transaction_id, **context
-            )
-            
-            # Query Wikidata
-            wikidata_result = query_wikidata(
-                org_name, transaction_id=transaction_id, **context
-            )
-            results['wikidata'] = wikidata_result
-            
-            # Check adverse news
-            results['news'] = check_adverse_news(
-                org_name, transaction_id=transaction_id, **context
-            )
-            
-            # Add any discovered people from Wikidata
-            results['discovered_people'] = wikidata_result.get('associated_people', [])
+            # Add discovered people from Wikidata
+            results['discovered_people'] = results['wikidata'].get('associated_people', [])
             
             # Add historical data if available
-            # Use the history_map that was already converted to a dictionary
             if history_map and org_name in history_map:
                 results['history'] = history_map.get(org_name, {})
                 
@@ -168,13 +138,10 @@ with DAG(
         # Get the organizations list
         orgs_list = extract_organizations(entities)
         
-        # Extract and flatten the history
-        history_map = extract_history_map(entity_history)
-        
         # Process each organization and return results
         org_results = process_organization.expand(
             organization=orgs_list,
-            history_map=[history_map]  # Pass it as a single list item to ensure it doesn't get expanded
+            history_map=[entity_history]
         )
         
         return org_results
@@ -189,40 +156,20 @@ with DAG(
             return entities_dict.get("people", [])
         
         @task
-        def extract_history_map(history_dict):
-            """Extract and flatten the entity history into a usable map."""
-            # This helps convert the XCom reference to an actual dictionary
-            return history_dict or {}
-        
-        @task
         def process_person(person, history_map, **context):
             """Process a single person with all relevant checks."""
             person_name = person.get('name', '')
             logger.info(f"Processing person: {person_name}")
             
-            # Extract the transaction ID from the unpacked transaction_info
-            # This avoids nested XCom references
             transaction_id = context['dag_run'].conf.get('transaction_id')
             
-            results = {}
-            
-            # Check PEP list
-            results['pep'] = check_pep_list(
-                person_name, transaction_id=transaction_id, **context
-            )
-            
-            # Check sanctions
-            results['sanctions'] = check_sanctions(
-                'Person', person_name, transaction_id=transaction_id, **context
-            )
-            
-            # Check adverse news
-            results['news'] = check_adverse_news(
-                person_name, transaction_id=transaction_id, **context
-            )
+            results = {
+                'pep': check_pep_list(person_name, transaction_id=transaction_id, **context),
+                'sanctions': check_sanctions('Person', person_name, transaction_id=transaction_id, **context),
+                'news': check_adverse_news(person_name, transaction_id=transaction_id, **context)
+            }
             
             # Add historical data if available
-            # Use the history_map that was already converted to a dictionary
             if history_map and person_name in history_map:
                 results['history'] = history_map.get(person_name, {})
                 
@@ -234,13 +181,10 @@ with DAG(
         # Get the people list
         people_list = extract_people(entities)
         
-        # Extract and flatten the history
-        history_map = extract_history_map(entity_history)
-        
         # Process each person and return results
         people_results = process_person.expand(
             person=people_list,
-            history_map=[history_map]  # Pass it as a single list item to ensure it doesn't get expanded
+            history_map=[entity_history]
         )
         
         return people_results
@@ -266,12 +210,6 @@ with DAG(
             
             logger.info(f"Discovered {len(discovered_people)} additional people from Wikidata")
             return discovered_people
-            
-        @task
-        def extract_history_map(history_dict):
-            """Extract and flatten the entity history into a usable map."""
-            # This helps convert the XCom reference to an actual dictionary
-            return history_dict or {}
         
         @task
         def process_discovered_person(person, history_map, **context):
@@ -279,105 +217,32 @@ with DAG(
             person_name = person.get('name', '')
             logger.info(f"Processing discovered person: {person_name}")
             
-            # Extract the transaction ID from the context
             transaction_id = context['dag_run'].conf.get('transaction_id')
             
-            results = {}
-            
-            # Check PEP list
-            results['pep'] = check_pep_list(
-                person_name, transaction_id=transaction_id, **context
-            )
-            
-            # Check sanctions
-            results['sanctions'] = check_sanctions(
-                'Person', person_name, transaction_id=transaction_id, **context
-            )
-            
-            # Check adverse news
-            results['news'] = check_adverse_news(
-                person_name, transaction_id=transaction_id, **context
-            )
+            results = {
+                'pep': check_pep_list(person_name, transaction_id=transaction_id, **context),
+                'sanctions': check_sanctions('Person', person_name, transaction_id=transaction_id, **context),
+                'news': check_adverse_news(person_name, transaction_id=transaction_id, **context),
+                'source': person.get('source', 'wikidata'),
+                'entity_connection': person.get('entity_connection', '')
+            }
             
             # Add historical data if available
             if history_map and person_name in history_map:
                 results['history'] = history_map.get(person_name, {})
                 
-            # Include source information
-            results['source'] = person.get('source', 'wikidata')
-            results['entity_connection'] = person.get('entity_connection', '')
-            
             return {
                 "name": person_name,
                 "results": results
             }
-        
-        # Extract and flatten the history
-        history_map = extract_history_map(entity_history)
             
         # Extract discovered people
         discovered_list = extract_discovered_people(org_results)
         
-        # Check if the list is empty using a task to ensure proper task dependencies
-        @task
-        def check_discovered_list(people_list):
-            return len(people_list) > 0
-            
-        has_discovered = check_discovered_list(discovered_list)
-        
-        # Process each discovered person if any
-        @task
-        def empty_discovered_list():
-            return []
-            
-        @task
-        def process_all_discovered(people_list, history_map, has_people):
-            if not has_people:
-                return []
-                
-            # We need to manually process the list since we can't use dynamic task mapping with conditionals
-            results = []
-            
-            for person in people_list:
-                person_name = person.get('name', '')
-                transaction_id = context['dag_run'].conf.get('transaction_id')
-                
-                person_results = {}
-                
-                # Check PEP list
-                person_results['pep'] = check_pep_list(
-                    person_name, transaction_id=transaction_id
-                )
-                
-                # Check sanctions
-                person_results['sanctions'] = check_sanctions(
-                    'Person', person_name, transaction_id=transaction_id
-                )
-                
-                # Check adverse news
-                person_results['news'] = check_adverse_news(
-                    person_name, transaction_id=transaction_id
-                )
-                
-                # Add historical data if available
-                if history_map and person_name in history_map:
-                    person_results['history'] = history_map.get(person_name, {})
-                    
-                # Include source information
-                person_results['source'] = person.get('source', 'wikidata')
-                person_results['entity_connection'] = person.get('entity_connection', '')
-                
-                results.append({
-                    "name": person_name,
-                    "results": person_results
-                })
-                
-            return results
-            
-        discovered_results = process_all_discovered(
-            discovered_list, 
-            history_map,
-            has_discovered
+        # Process each discovered person
+        discovered_results = process_discovered_person.expand(
+            person=discovered_list,
+            history_map=[entity_history]
         )
             
         return discovered_results
@@ -394,21 +259,9 @@ with DAG(
         discovered_people_results
     ):
         """Combine all processing results into a single structure for risk assessment."""
-        # Extract transaction info values
-        transaction_id = None
-        transaction_data = None
-        
-        # Handle the transaction_info object
-        if isinstance(transaction_info, dict):
-            transaction_id = transaction_info.get("transaction_id")
-            transaction_data = transaction_info.get("transaction_data")
-        else:
-            # Fallback to getting directly from context
-            from airflow.operators.python import get_current_context
-            context = get_current_context()
-            dag_run_conf = context['dag_run'].conf
-            transaction_id = dag_run_conf.get('transaction_id')
-            transaction_data = dag_run_conf.get('transaction_data')
+        # Extract transaction info
+        transaction_id = transaction_info["transaction_id"]
+        transaction_data = transaction_info["transaction_data"]
         
         # Build the complete results structure
         all_results = {
@@ -421,35 +274,23 @@ with DAG(
             "discovered_people": {}
         }
         
-        # Process organization results - safely handle if results are None or empty
         if org_results:
-            # Handle both list and non-list cases
-            org_results_list = org_results if isinstance(org_results, list) else [org_results]
-            for org_result in org_results_list:
-                if isinstance(org_result, dict):
-                    name = org_result.get('name', '')
-                    if name:
-                        all_results["organizations"][name] = org_result.get('results', {})
-        
-        # Process people results - safely handle if results are None or empty
+            for org_result in org_results:
+                name = org_result.get('name')
+                if name:
+                    all_results["organizations"][name] = org_result.get('results', {})
+            
         if people_results:
-            # Handle both list and non-list cases
-            people_results_list = people_results if isinstance(people_results, list) else [people_results]
-            for person_result in people_results_list:
-                if isinstance(person_result, dict):
-                    name = person_result.get('name', '')
-                    if name:
-                        all_results["people"][name] = person_result.get('results', {})
-        
-        # Process discovered people results - safely handle if results are None or empty
+            for person_result in people_results:
+                name = person_result.get('name')
+                if name:
+                    all_results["people"][name] = person_result.get('results', {})
+            
         if discovered_people_results:
-            # Handle both list and non-list cases
-            discovered_list = discovered_people_results if isinstance(discovered_people_results, list) else [discovered_people_results]
-            for person_result in discovered_list:
-                if isinstance(person_result, dict):
-                    name = person_result.get('name', '')
-                    if name:
-                        all_results["discovered_people"][name] = person_result.get('results', {})
+            for person_result in discovered_people_results:
+                name = person_result.get('name')
+                if name:
+                    all_results["discovered_people"][name] = person_result.get('results', {})
         
         return all_results
     
@@ -472,16 +313,9 @@ with DAG(
         transaction_id = transaction_info["transaction_id"]
         
         try:
-            # Migrate the transaction folder to a structured knowledge base
             success = migrate_transaction_to_knowledge_base(RESULTS_FOLDER, transaction_id)
-            
-            if success:
-                logger.info(f"Successfully organized knowledge base for transaction {transaction_id}")
-            else:
-                logger.warning(f"Failed to organize knowledge base for transaction {transaction_id}")
-                
+            logger.info(f"Knowledge base organization {'successful' if success else 'failed'} for transaction {transaction_id}")
             return {"knowledge_base_organized": success}
-        
         except Exception as e:
             logger.error(f"Error organizing knowledge base: {str(e)}")
             return {"knowledge_base_organized": False, "error": str(e)}
@@ -490,8 +324,6 @@ with DAG(
     def store_in_neo4j(transaction_info, entities, risk_assessment):
         """Store transaction results in Neo4j."""
         transaction_id = transaction_info["transaction_id"]
-        
-        # Use the Neo4j utility to store the results
         result = store_transaction_results(transaction_id, risk_assessment, entities)
         
         logger.info(f"Stored transaction results in Neo4j: {result}")
@@ -507,14 +339,11 @@ with DAG(
             logger.warning(f"No callback URL provided for transaction {transaction_id}")
             return {"callback_sent": False, "reason": "No callback URL provided"}
         
-        dag_id = context['dag'].dag_id
-        run_id = context['run_id']
-        
         # Prepare the callback data
         callback_data = {
             "transaction_id": transaction_id,
-            "dag_id": dag_id,
-            "run_id": run_id,
+            "dag_id": context['dag'].dag_id,
+            "run_id": context['run_id'],
             "status": "completed",
             "risk_assessment": risk_assessment
         }
@@ -522,8 +351,6 @@ with DAG(
         # Send the callback
         try:
             logger.info(f"Sending callback to {callback_url}")
-            
-            # Use httpx for better async support
             with httpx.Client(timeout=30.0) as client:
                 response = client.post(callback_url, json=callback_data)
                 response.raise_for_status()
@@ -532,7 +359,6 @@ with DAG(
             return {"callback_sent": True}
         except Exception as e:
             logger.error(f"Error sending callback: {str(e)}")
-            # Continue even if callback fails
             return {"callback_sent": False, "error": str(e)}
     
     # ========== DAG WORKFLOW DEFINITION ==========
@@ -566,13 +392,6 @@ with DAG(
     # Send callback should be the last task
     callback_result = send_callback(transaction_info, risk_assessment)
     
-    # Define the final task dependencies - ensure callback is the last step
+    # Define the task dependencies
     [kb_result, neo4j_result] >> callback_result
     
-    # End task to mark completion
-    end_task = DummyOperator(
-        task_id='end_task',
-        trigger_rule=TriggerRule.ALL_DONE,  # Run even if some tasks fail
-    )
-    
-    callback_result >> end_task

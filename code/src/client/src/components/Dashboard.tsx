@@ -269,7 +269,7 @@ const Dashboard: React.FC = () => {
       <Flex justify="space-between" align="center" mb="xl">
         <Box>
           <Title order={2} mb={4}>Risk Intelligence Dashboard</Title>
-          <Text c="dimmed" size="sm">Overview of AML risk assessments and compliance metrics</Text>
+          <Text c="dimmed" size="sm">Overview of risk assessments and compliance metrics</Text>
         </Box>
         <Group>
           <Button

@@ -17,24 +17,6 @@ from dags.utils.transaction_folder import (
 # Configure logging
 logger = logging.getLogger(__name__)
 
-
-def collect_all_task_ids(**context):
-    """
-    This function is a placeholder for backward compatibility.
-    The new DAG structure doesn't need this anymore as it uses
-    the TaskFlow API and properly passes data between tasks.
-    """
-    logger.info("collect_all_task_ids is now a no-op in the updated DAG")
-    return []
-
-def log_all_task_results(**context):
-    """
-    This function is a placeholder for backward compatibility.
-    In the new DAG, this is handled by the compile_all_results task.
-    """
-    logger.info("log_all_task_results is now a no-op in the updated DAG")
-    return {}
-
 def generate_risk_assessment(transaction_data=None, transaction_id=None, transaction_filepath=None, all_results=None, **context):
     """
     Generate a final risk assessment based on all collected data.
@@ -42,7 +24,6 @@ def generate_risk_assessment(transaction_data=None, transaction_id=None, transac
     Args:
         transaction_data: Text of the transaction (preferred)
         transaction_id: ID of the transaction
-        transaction_filepath: Path to the original transaction file (for backward compatibility)
         all_results: Compiled results from all previous tasks
         context: Airflow task context
     """
@@ -50,16 +31,7 @@ def generate_risk_assessment(transaction_data=None, transaction_id=None, transac
         model = create_genai_model()
 
         # Handle the transaction text - either directly provided or read from file
-        if not transaction_data and transaction_filepath:
-            # Backward compatibility mode - read from file
-            logger.info(f"Reading transaction text from file: {transaction_filepath}")
-            with open(transaction_filepath, 'r', encoding='utf-8') as f:
-                transaction_text = f.read()
-                
-            # Extract transaction ID from filepath if not provided
-            if not transaction_id:
-                transaction_id = os.path.basename(transaction_filepath).split('.')[0]
-        elif transaction_data:
+        if transaction_data:
             # New mode - use the provided text directly
             transaction_text = transaction_data
         else:
@@ -88,14 +60,7 @@ def generate_risk_assessment(transaction_data=None, transaction_id=None, transac
             if not entities:
                 entities = load_transaction_data(RESULTS_FOLDER, transaction_id, "entities.json")
                 
-                # Backward compatibility - check old location
-                if not entities:
-                    entities_filename = f"entities_{transaction_id}.json"
-                    entities_path = os.path.join(RESULTS_FOLDER, entities_filename)
-                    if os.path.exists(entities_path):
-                        with open(entities_path, 'r', encoding='utf-8') as f:
-                            entities = json.load(f)
-        
+                
         # Format the assessment_data structure
         assessment_data = {
             "transaction_text": transaction_text,
@@ -284,11 +249,5 @@ def generate_risk_assessment(transaction_data=None, transaction_id=None, transac
         # Save the error result to the transaction folder
         if transaction_id:
             save_transaction_data(RESULTS_FOLDER, transaction_id, "error.json", error_result)
-        
-        # Also save a copy for backward compatibility
-        result_filename = f"error_result_{transaction_id or 'unknown'}.json"
-        result_path = os.path.join(RESULTS_FOLDER, result_filename)
-        with open(result_path, 'w') as f:
-            json.dump(error_result, f, indent=2)
             
         return error_result
