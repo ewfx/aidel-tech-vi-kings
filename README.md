@@ -32,25 +32,97 @@ The main objective of this project is to develop a sophisticated AI/ML-powered s
 
 
 ## ⚙️ What It Does
-Our AML system will perform these steps automatically:
 
-- **Entity Extraction**  
-  The system identifies organizations, individuals, and jurisdictions from your transaction.
+```mermaid
+%%{
+  init: {
+    'theme': 'dark',
+    'themeVariables': {
+      'primaryColor': '#0078D7',
+      'primaryTextColor': '#FFFFFF',
+      'primaryBorderColor': '#5B9BD5',
+      'lineColor': '#5B9BD5',
+      'secondaryColor': '#2C3E50',
+      'tertiaryColor': '#2980B9',
+      'fontFamily': 'Arial, sans-serif'
+    },
+    'flowchart': {
+      'curve': 'basis',
+      'diagramPadding': 10
+    }
+  }
+}%%
 
-- **Sanctions Screening**  
-  All entities are checked against global sanctions lists and PEP databases.
+flowchart TB
+    classDef mainNode fill:#0078D7,stroke:#5B9BD5,stroke-width:2px,color:white,font-weight:bold
+    classDef enrichNode fill:#7030A0,stroke:#9b59b6,stroke-width:2px,color:white
+    classDef sourceNode fill:#00B0F0,stroke:#00B0F0,stroke-width:2px,color:white
+    classDef riskNode fill:#C00000,stroke:#C00000,stroke-width:2px,color:white
+    classDef outputNode fill:#ED7D31,stroke:#ED7D31,stroke-width:2px,color:white
+    
+    %% Main workflow
+    Transaction["📄 Transaction Data"]:::mainNode
+    ExtractEntities["🔍 Extract Entities"]:::mainNode
+    EnrichData["📊 Enrich Data"]:::enrichNode
+    AssessRisk["⚖️ Risk Assessment"]:::riskNode
+    StoreResults["💾 Store Results"]:::outputNode
+    SendCallback["🔄 API Callback"]:::outputNode
+    
+    %% Flow connections
+    Transaction --> ExtractEntities --> EnrichData --> AssessRisk --> StoreResults --> SendCallback
+    
+    %% Data sources
+    subgraph DataSources["Intelligence Sources"]
+        direction TB
+        OpenCorp["🏛️ Corporate Registry"]:::sourceNode
+        Sanctions["⚠️ Sanctions Lists"]:::sourceNode
+        PEP["👑 PEP Database"]:::sourceNode
+        Wikidata["🌐 Entity Networks"]:::sourceNode
+        News["📰 Adverse Media"]:::sourceNode
+    end
+    
+    %% Entity groups
+    subgraph Entities["Entity Processing"]
+        direction TB
+        ProcessOrgs["🏢 Organizations"]:::enrichNode
+        ProcessPeople["👤 People"]:::enrichNode
+        ProcessDiscovered["🔎 Discovered Entities"]:::enrichNode
+    end
+    
+    %% Storage
+    subgraph Storage["Data Storage"]
+        direction TB
+        Neo4j["🕸️ Neo4j Graph DB"]:::outputNode
+        KB["📚 Knowledge Base"]:::outputNode
+    end
+    
+    %% Connect subgraphs
+    ExtractEntities --> Entities
+    Entities --> DataSources
+    EnrichData --> DataSources
+    AssessRisk --> Storage
+    StoreResults --> Storage
+```
 
-- **Entity Verification**  
-  Organizations are verified through corporate registries and global databases.
+The DAG workflow processes transactions through six key stages:
 
-- **Risk Assessment**  
-  A comprehensive risk score is calculated based on all findings and evidence.
+1. **Transaction Data** - Receives transaction information from the API
+2. **Extract Entities** - Identifies organizations and people using Gemini AI
+3. **Enrich Data** - Gathers intelligence from multiple external sources
+4. **Risk Assessment** - Analyzes data to calculate risk scores with supporting evidence
+5. **Store Results** - Persists findings in structured storage systems
+6. **API Callback** - Notifies requesting systems when processing completes
 
-- **Report Generation**  
-  A detailed risk report is generated with supporting evidence and recommendations.
+The architecture integrates several components:
+
+- **Entity Processing** - Handles organizations, people, and discovered entities in parallel
+- **Intelligence Sources** - Corporate registries, sanctions lists, PEP databases, entity networks, and adverse media
+- **Data Storage** - Neo4j graph database for relationship analysis and organized knowledge base
 
 
 ## 🛠️ How We Built It
+![Diagram](artifacts/arch/hld.svg)
+
 We utilized **Apache Airflow** for workflow orchestration, **Neo4j** for graph-based data modeling, and **Gemini LLMs** for AI-powered tasks like entity extraction and risk scoring. The frontend was built with React, Vite, and Mantine, while the **backend** used FastAPI for high performance and scalability.
 
 ## 🚧 Challenges We Faced
