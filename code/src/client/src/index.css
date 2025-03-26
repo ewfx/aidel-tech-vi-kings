@@ -1,0 +1,378 @@
+/* index.css - Enhanced global styles for ultra-modern UI */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Base styles with enhanced visual appeal */
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #f8f9fa;
+  color: #212529;
+  background-image: radial-gradient(#e6e6e6 1px, transparent 0);
+  background-size: 40px 40px;
+  background-position: -19px -19px;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Enhanced link styles */
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.2s ease, transform 0.2s ease;
+  position: relative;
+}
+
+a:hover {
+  text-decoration: none;
+  color: var(--mantine-color-blue-6);
+}
+
+/* Advanced network visualization tooltips */
+.tooltip {
+  position: absolute;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #eee;
+  border-radius: 8px;
+  pointer-events: none;
+  font-size: 13px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  max-width: 300px;
+  backdrop-filter: blur(5px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Interactive network nodes */
+.node {
+  cursor: grab;
+  transition: stroke-width 0.2s ease, opacity 0.2s ease;
+}
+
+.node:hover {
+  opacity: 0.8;
+}
+
+.node:active {
+  cursor: grabbing;
+}
+
+/* Enhanced code and JSON displays */
+pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  background: #f6f8fa;
+  border-radius: 8px;
+  padding: 16px;
+  font-size: 13px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Modern scrollbar for better aesthetics */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* Enhanced animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.slide-in {
+  animation: slideIn 0.3s ease-in-out;
+}
+
+.scale-in {
+  animation: scaleIn 0.2s ease-in-out;
+}
+
+/* Modern components transition effects */
+.mantine-Tabs-panel,
+.mantine-Modal-content,
+.mantine-Popover-dropdown,
+.mantine-Menu-dropdown {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced progress pulse effect */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(66, 133, 244, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(66, 133, 244, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(66, 133, 244, 0);
+  }
+}
+
+.pulse {
+  animation: pulse 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+/* Modern card hover effects */
+.card-hover-effect {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-hover-effect:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Enhanced table row hover effect */
+.mantine-Table-row {
+  transition: background-color 0.2s ease;
+}
+
+.mantine-Table-row:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* Consistent panel heights */
+.mantine-Tabs-panel {
+  min-height: 400px;
+}
+
+/* Enhanced input focus states */
+.mantine-TextInput-input:focus, 
+.mantine-Textarea-input:focus, 
+.mantine-Select-input:focus {
+  border-color: var(--mantine-color-blue-6);
+  box-shadow: 0 0 0 3px rgba(24, 144, 255, 0.15);
+  transition: all 0.2s ease;
+}
+
+/* Modern risk color helpers with gradients */
+.risk-high {
+  background: linear-gradient(45deg, var(--mantine-color-red-6), var(--mantine-color-red-7));
+  color: white;
+}
+
+.risk-medium {
+  background: linear-gradient(45deg, var(--mantine-color-orange-5), var(--mantine-color-orange-6));
+  color: white;
+}
+
+.risk-low {
+  background: linear-gradient(45deg, var(--mantine-color-green-5), var(--mantine-color-green-6));
+  color: white;
+}
+
+/* Glass effect for cards */
+.glass-card {
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Navbar enhancements */
+.mantine-AppShell-navbar {
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+/* Button hover effects */
+.mantine-Button-root:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Special logo effect */
+.logo-glow {
+  filter: drop-shadow(0 0 5px rgba(24, 144, 255, 0.5));
+}
+
+/* Theme toggle animation */
+.theme-toggle {
+  transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.theme-toggle:hover {
+  transform: rotate(180deg);
+}
+
+/* Badge notification effect */
+@keyframes badgePulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+.badge-notification {
+  animation: badgePulse 2s infinite;
+}
+
+/* Navbar active link highlight */
+.mantine-NavLink-root.mantine-NavLink-active {
+  position: relative;
+  overflow: hidden;
+}
+
+.mantine-NavLink-root.mantine-NavLink-active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  background: var(--mantine-color-blue-6);
+  border-radius: 0 4px 4px 0;
+}
+
+/* App shell gradient background */
+.gradient-bg {
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%);
+}
+
+/* Modal animations */
+.mantine-Modal-root {
+  transform-origin: center center;
+}
+
+/* Tooltip enhancement */
+.mantine-Tooltip-tooltip {
+  backdrop-filter: blur(8px);
+}
+
+/* User avatar hover effect */
+.user-avatar-container {
+  transition: transform 0.2s ease;
+}
+
+.user-avatar-container:hover {
+  transform: scale(1.05);
+}
+
+/* Data visualization enhancements */
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke-opacity: 0.2;
+}
+
+.recharts-tooltip-wrapper {
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.15));
+  transition: opacity 0.2s ease;
+}
+
+/* Chart animations */
+.recharts-bar-rectangle, 
+.recharts-line-curve,
+.recharts-area-area {
+  transition: opacity 0.3s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .mantine-AppShell-navbar {
+    backdrop-filter: blur(15px);
+  }
+  
+  .hide-on-mobile {
+    display: none;
+  }
+}
+
+/* Custom scrollable areas */
+.custom-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+/* Status indicators */
+.status-indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.status-active {
+  background-color: var(--mantine-color-green-6);
+  box-shadow: 0 0 0 3px rgba(0, 184, 0, 0.2);
+}
+
+.status-pending {
+  background-color: var(--mantine-color-yellow-6);
+  box-shadow: 0 0 0 3px rgba(255, 184, 0, 0.2);
+}
+
+.status-inactive {
+  background-color: var(--mantine-color-gray-6);
+  box-shadow: 0 0 0 3px rgba(128, 128, 128, 0.2);
+}
+
+/* Navbar collapsed state */
+.navbar-collapsed .nav-label,
+.navbar-collapsed .nav-description {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+/* Frosted glass cards */
+.frosted-card {
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Loading shimmer effect */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0) 0%, 
+    rgba(255, 255, 255, 0.6) 50%, 
+    rgba(255, 255, 255, 0) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}

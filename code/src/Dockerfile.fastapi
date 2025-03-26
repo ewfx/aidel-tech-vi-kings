@@ -1,0 +1,25 @@
+FROM python:3.10-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    build-essential \
+    curl \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Create required directories
+RUN mkdir -p /app/results
+
+# Expose the API port
+EXPOSE 8000
+
+# The actual app code will be mounted as a volume
+# CMD is overridden in docker-compose.yml to enable auto-reload
+CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "8000"]

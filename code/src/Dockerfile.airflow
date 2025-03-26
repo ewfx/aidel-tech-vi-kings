@@ -1,0 +1,42 @@
+FROM apache/airflow:2.6.0-python3.10
+
+USER root
+
+# Install system dependencies needed for some Python packages
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    build-essential \
+    libssl-dev \
+    libffi-dev \
+    python3-dev \
+    curl \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create required directories
+RUN mkdir -p /opt/airflow/data/transactions \
+    /opt/airflow/data/processed \
+    /opt/airflow/data/failed \
+    /opt/airflow/data/results \
+    /opt/airflow/data/sanctions \
+    /opt/airflow/data/pep
+
+USER airflow
+
+# Copy requirements file
+COPY requirements.txt .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Set up NLTK data
+RUN python -c "import nltk; nltk.download('vader_lexicon')"
+
+# Download the PEP data
+WORKDIR /opt/airflow/data/pep
+RUN curl -o pep_data.csv https://data.opensanctions.org/datasets/20250322/peps/targets.simple.csv?v=20250322152703-fle || echo "PEP data download will be handled at runtime"
+
+# Set PATH for development environment
+ENV PYTHONPATH=/opt/airflow
+
+WORKDIR /opt/airflow
